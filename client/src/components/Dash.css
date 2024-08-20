@@ -1,0 +1,19 @@
+.card.bg-primary {
+    background: linear-gradient(135deg, #1f77b4, #1f77b4);
+  }
+  .card.bg-info {
+    background: linear-gradient(135deg, #17a2b8, #17a2b8);
+  }
+  .card.bg-warning {
+    background: linear-gradient(135deg, #ffc107, #ffc107);
+  }
+  
+  @media (max-width: 768px) {
+    .chart-container {
+      height: 300px;
+    }
+    .card-body {
+      padding: 15px;
+    }
+  }
+  

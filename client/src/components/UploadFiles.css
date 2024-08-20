@@ -1,0 +1,45 @@
+/* UploadFiles.css */
+
+/* Set the background color for the entire page */
+body, html {
+    background-color: #f8f9fa; /* Light gray background */
+    height: 100%;
+    margin: 0;
+}
+
+/* Center the card and give it a shadow */
+.d-flex.justify-content-center.align-items-center.min-vh-100 {
+    background-color: #e7e7e7; /* Dark blue background */
+}
+
+.cardUp {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.card-bodyUp {
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Style for the dropzone */
+.dropzone {
+    border: 2px dashed #007bff;
+    padding: 20px;
+    text-align: center;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    color: #495057;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: #004080; /* Darker blue button */
+    border-color: #004080;
+}
+
+.btn-dark:hover {
+    background-color: #003366;
+    border-color: #003366;
+}

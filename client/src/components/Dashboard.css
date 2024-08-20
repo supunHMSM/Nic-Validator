@@ -1,0 +1,77 @@
+.dashboard-card {
+  background-color: #060625;
+  border: none;
+  color: #aaa7a7;
+  border-radius: 10px;
+}
+
+.dashboard-title {
+  color: #704f00;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.dashboard-table {
+  background-color: #2a2a3b;
+  color: #aaa7a7;
+  border-radius: 8px;
+}
+
+.dashboard-table thead th {
+  background-color: #0f447a;
+  color: #f3f3f3;
+}
+
+.dashboard-table tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+.dashboard-table tbody tr:hover {
+  background-color: #454563;
+}
+
+h5 {
+  color: #ffda79;
+}
+
+.container {
+  max-width: 900px;
+}
+
+/*Buttons
+/* Dashboard.css */
+
+.highlight-button {
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.highlight-button-outline-primary {
+  color: #ffffff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.highlight-button-outline-success {
+  color: #ffffff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.highlight-button-outline-info {
+  color: #ffffff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+
+.highlight-button:hover {
+  transform: scale(1.05);
+}
+
+
+
+
+
