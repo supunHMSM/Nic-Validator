@@ -57,54 +57,60 @@ app.get('/download-report/pdf', async (req, res) => {
         const fileName = `NIC-report-${Date.now()}.pdf`;
         const filePath = path.join(reportsDir, fileName);
 
-        // Start writing the PDF to a file
+        // Create a write stream for the PDF file
         const writeStream = fs.createWriteStream(filePath);
         doc.pipe(writeStream);
 
-        // Add a title with styling
-        doc.fontSize(20).font('Helvetica-Bold').text('NIC Report', { align: 'center' });
-        doc.moveDown(2);
+        // Add a title
+        doc.fontSize(24).font('Helvetica-Bold').text('NIC Report', { align: 'center' });
+        doc.moveDown(1);
 
-        // Table headers with background color
-        const headerHeight = 20;
-        const headerX = 50;
-        const headerY = doc.y;
+        // Table headers
+        const headerHeight = 30;
+        const columnWidths = { NIC: 120, Birthday: 140, Age: 60, Gender: 120 };
+        const startX = 50;
+        const startY = doc.y;
 
-        doc.fontSize(12).font('Helvetica-Bold').fillColor('#ffffff')
-            .rect(headerX, headerY, 500, headerHeight).fill('#1f4e78').stroke()
-            .text('NIC', headerX + 10, headerY + 5, { width: 100, align: 'left' })
-            .text('Birthday', headerX + 160, headerY + 5, { width: 100, align: 'left' })
-            .text('Age', headerX + 310, headerY + 5, { width: 50, align: 'center' })
-            .text('Gender', headerX + 410, headerY + 5, { width: 90, align: 'left' });
+        doc.fontSize(14).font('Helvetica-Bold').fillColor('#ffffff')
+            .rect(startX, startY, Object.values(columnWidths).reduce((a, b) => a + b, 0), headerHeight)
+            .fill('#1f4e78')
+            .stroke();
+
+        let xOffset = startX;
+        doc.fillColor('#ffffff').text('NIC', xOffset, startY + 8, { width: columnWidths.NIC, align: 'left' });
+        xOffset += columnWidths.NIC;
+        doc.text('Birthday', xOffset, startY + 8, { width: columnWidths.Birthday, align: 'left' });
+        xOffset += columnWidths.Birthday;
+        doc.text('Age', xOffset, startY + 8, { width: columnWidths.Age, align: 'center' });
+        xOffset += columnWidths.Age;
+        doc.text('Gender', xOffset, startY + 8, { width: columnWidths.Gender, align: 'left' });
         doc.moveDown();
 
-        // Reset fill color for table rows
-        doc.fillColor('#000000');
-
-        // Table rows with alternating row colors for better readability
+        // Table rows
+        const rowHeight = 25;
         rows.forEach((item, index) => {
-            const rowHeight = 20;
-            const rowX = 50;
+            const backgroundColor = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
             const rowY = doc.y;
-            const backgroundColor = index % 2 === 0 ? '#f0f0f0' : '#ffffff';
 
-            // Extract the birthday in YYYY-MM-DD format
-            const formattedBirthday = new Date(item.birthday).toISOString().split('T')[0];
+            // Add row background
+            doc.rect(startX, rowY, Object.values(columnWidths).reduce((a, b) => a + b, 0), rowHeight)
+                .fill(backgroundColor)
+                .stroke();
 
-            doc.rect(rowX, rowY, 500, rowHeight).fill(backgroundColor).stroke();
-
-            // Add data to the table
-            doc.fillColor('#000000')
-                .text(item.NIC, rowX + 10, rowY + 5, { width: 100, align: 'left' })
-                .text(formattedBirthday, rowX + 160, rowY + 5, { width: 100, align: 'left' })
-                .text(item.age.toString(), rowX + 310, rowY + 5, { width: 50, align: 'center' })
-                .text(item.gender, rowX + 410, rowY + 5, { width: 90, align: 'left' });
-            doc.moveDown(1.5);
+            let xOffset = startX;
+            doc.fillColor('#000000').text(item.NIC, xOffset, rowY + 5, { width: columnWidths.NIC, align: 'left' });
+            xOffset += columnWidths.NIC;
+            doc.text(new Date(item.birthday).toISOString().split('T')[0], xOffset, rowY + 5, { width: columnWidths.Birthday, align: 'left' });
+            xOffset += columnWidths.Birthday;
+            doc.text(item.age.toString(), xOffset, rowY + 5, { width: columnWidths.Age, align: 'center' });
+            xOffset += columnWidths.Age;
+            doc.text(item.gender, xOffset, rowY + 5, { width: columnWidths.Gender, align: 'left' });
+            doc.moveDown(0.5);
         });
 
         doc.end();
 
-        // Wait for the PDF to be fully written
+        // Handle file download
         writeStream.on('finish', () => {
             res.download(filePath, fileName, (err) => {
                 if (err) {
@@ -130,6 +136,7 @@ app.get('/download-report/pdf', async (req, res) => {
         res.status(500).json({ message: 'Error generating PDF report' });
     }
 });
+
 
 // Route to download CSV report
 app.get('/download-report/csv', async (req, res) => {
