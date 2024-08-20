@@ -231,22 +231,24 @@ app.get('/download-report/excel', async (req, res) => {
 
 // //End Genarate Report
 
-app.get('/summary', async (req, res) => {
-    try {
-        const [totalRecords] = await db.query('SELECT COUNT(*) AS count FROM users');
-        const [maleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Male'");
-        const [femaleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Female'");
+// app.get('/summary', async (req, res) => {
+//     try {
+//         const [totalRecords] = await db.query('SELECT COUNT(*) AS count FROM users');
+//         const [maleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Male'");
+//         const [femaleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Female'");
+//        // const [rejectUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE rejected = TRUE");
 
-        res.json({
-            totalRecords: totalRecords[0].count,
-            maleUsers: maleUsers[0].count,
-            femaleUsers: femaleUsers[0].count
-        });
-    } catch (error) {
-        console.error("Error fetching summary data:", error.message);
-        res.status(500).json({ message: 'Error fetching summary data' });
-    }
-});
+//         res.json({
+//             totalRecords: totalRecords[0].count,
+//             maleUsers: maleUsers[0].count,
+//             femaleUsers: femaleUsers[0].count,
+//             //rejectUsers: rejectedUsers[0].count
+//         });
+//     } catch (error) {
+//         console.error("Error fetching summary data:", error.message);
+//         res.status(500).json({ message: 'Error fetching summary data' });
+//     }
+// });
 
 
 
@@ -310,6 +312,7 @@ app.post('/upload-csv', upload.array("files", 4), async (req, res) => {
                             const errorMsg = `Error processing NIC ${nic}: ${error.message}`;
                             console.error(errorMsg);
                             errors.push(errorMsg);
+                            saveRejectedNIC(nic, error.message);
                         }
                     }
                 })
@@ -332,6 +335,7 @@ app.post('/upload-csv', upload.array("files", 4), async (req, res) => {
                 const errorMsg = `Error saving data to the database: ${error.message}`;
                 console.error(errorMsg);
                 errors.push(errorMsg);
+                saveRejectedNIC(row.NIC, "Database Insertion Error");
             }
         }
 
@@ -344,6 +348,49 @@ app.post('/upload-csv', upload.array("files", 4), async (req, res) => {
 
     res.json({ data: allData, errors});
 });
+
+// Function to save rejected NICs
+const saveRejectedNIC = async (nic, reason) => {
+    try {
+        await db.query(
+            'INSERT INTO rejected_nics (NIC, reason) VALUES (?, ?)',
+            [nic, reason]
+        );
+    } catch (error) {
+        console.error(`Error saving rejected NIC ${nic}: ${error.message}`);
+    }
+};
+
+// Route to retrieve rejected NICs
+app.get('/get-rejected-nics', async (req, res) => {
+    try {
+        const [rejectedNICs] = await db.query('SELECT * FROM rejected_nics ORDER BY created_at DESC');
+        res.json(rejectedNICs);
+    } catch (error) {
+        console.error('Error fetching rejected NICs:', error.message);
+        res.status(500).json({ message: 'Error fetching rejected NICs' });
+    }
+});
+
+app.get('/summary', async (req, res) => {
+    try {
+        const [totalRecords] = await db.query('SELECT COUNT(*) AS count FROM users');
+        const [maleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Male'");
+        const [femaleUsers] = await db.query("SELECT COUNT(*) AS count FROM users WHERE gender='Female'");
+        const [rejectedUsers] = await db.query("SELECT COUNT(*) AS count FROM rejected_nics");
+
+        res.json({
+            totalRecords: totalRecords[0].count,
+            maleUsers: maleUsers[0].count,
+            femaleUsers: femaleUsers[0].count,
+            rejectedUsers: rejectedUsers[0].count
+        });
+    } catch (error) {
+        console.error("Error fetching summary data:", error.message);
+        res.status(500).json({ message: 'Error fetching summary data' });
+    }
+});
+
 
 // Calculate age from NIC
 const calculateAgeFromNIC = (nic) => {

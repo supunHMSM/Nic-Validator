@@ -3,6 +3,8 @@ import { Row, Col, Container, Table, Card, Pagination, Form, Button } from 'reac
 import axios from 'axios';
 import './Dashboard.css';
 import Navigation from './Navigation';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -11,6 +13,8 @@ const Dashboard = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
+    AOS.init({ duration: 1000 });
+
     const fetchData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/get-data');
@@ -54,18 +58,19 @@ const Dashboard = () => {
       <Container className="my-5">
         <Row className="justify-content-center">
           <Col md={10}>
-            <Card className="dashboard-card shadow-sm ">
+            <Card className="dashboard-card shadow-sm" data-aos="fade-up">
               <Card.Body>
-                <h3 className="text-center mb-4 dashboard-title">Extracted Data</h3>
-                <h5 className="text-center mb-4">Total Users: {filteredData.length}</h5>
+                <h3 className="text-center mb-4 dashboard-title" data-aos="fade-down">Extracted Data</h3>
+                <h5 className="text-center mb-4" data-aos="fade-down">Total Users: {filteredData.length}</h5>
                 <Form.Control
                   type="text"
                   placeholder="Search by NIC, Birthday, Gender, or Age"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   className="mb-4"
+                  data-aos="fade-up"
                 />
-                <Table striped bordered hover className="dashboard-table">
+                <Table striped bordered hover className="dashboard-table" data-aos="fade-up">
                   <thead>
                     <tr>
                       <th>ID</th>
@@ -87,28 +92,27 @@ const Dashboard = () => {
                     ))}
                   </tbody>
                 </Table>
-                <div className="d-flex justify-content-center mt-4">
-                <Button
-                  className="highlight-button highlight-button-outline-primary me-2"
-                  onClick={() => handleDownload('pdf')}
-                >
-                  Download PDF
-                </Button>
-                <Button
-                  className="highlight-button highlight-button-outline-success me-2"
-                  onClick={() => handleDownload('csv')}
-                >
-                  Download CSV
-                </Button>
-                <Button
-                  className="highlight-button highlight-button-outline-info"
-                  onClick={() => handleDownload('excel')}
-                >
-                  Download Excel
-                </Button>
-
+                <div className="d-flex justify-content-center mt-4" data-aos="fade-up" data-aos-delay="300">
+                  <Button
+                    className="highlight-button highlight-button-outline-primary me-2"
+                    onClick={() => handleDownload('pdf')}
+                  >
+                    Download PDF
+                  </Button>
+                  <Button
+                    className="highlight-button highlight-button-outline-success me-2"
+                    onClick={() => handleDownload('csv')}
+                  >
+                    Download CSV
+                  </Button>
+                  <Button
+                    className="highlight-button highlight-button-outline-info"
+                    onClick={() => handleDownload('excel')}
+                  >
+                    Download Excel
+                  </Button>
                 </div>
-                <Pagination className="justify-content-center mt-4">
+                <Pagination className="justify-content-center mt-4" data-aos="fade-up" data-aos-delay="600">
                   {[...Array(totalPages)].map((_, index) => (
                     <Pagination.Item
                       key={index + 1}

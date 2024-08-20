@@ -17,3 +17,35 @@
     }
   }
   
+  .container {
+    max-width: 1200px;
+  }
+  
+  .chart-container {
+    position: relative;
+    height: 300px;
+  }
+  
+  .card-title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .card-body {
+    padding: 2rem;
+  }
+  
+  .shadow-sm {
+    transition: transform 0.3s ease;
+  }
+  
+  .shadow-sm:hover {
+    transform: translateY(-5px);
+  }
+  
+  .text-center {
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+  }
+  
