@@ -8,7 +8,7 @@
     background: linear-gradient(135deg, #ffc107, #ffc107);
   }
   
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .chart-container {
       height: 300px;
     }

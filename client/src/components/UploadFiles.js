@@ -15,7 +15,7 @@ function UploadFiles({ onDataLoaded }) {
     const navigate = useNavigate();
 
     const onDrop = useCallback((acceptedFiles) => {
-        if (acceptedFiles.length > 4) {
+        if (acceptedFiles.length > 5) {
             setError('You can only upload up to 4 files.');
             return;
         }
@@ -65,7 +65,7 @@ function UploadFiles({ onDataLoaded }) {
                 setSuccessMessage('Files uploaded successfully! Redirecting to dashboard...');
                 setTimeout(() => {
                     navigate('/dashboard');
-                }, 3000);
+                }, 6000);
             }
         } catch (error) {
             console.error("Error during file upload", error);

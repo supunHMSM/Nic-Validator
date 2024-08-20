@@ -328,11 +328,11 @@ app.post('/upload-csv', upload.array("files", 4), async (req, res) => {
             }
         }
 
-        fs.unlink(file.path, (err) => {
-            if (err) {
-                console.error(`Error deleting file ${file.path}: ${err.message}`);
-            }
-        });
+        // fs.unlink(file.path, (err) => {
+        //     if (err) {
+        //         console.error(`Error deleting file ${file.path}: ${err.message}`);
+        //     }
+        // });
     }
 
     res.json({ data: allData, errors});
